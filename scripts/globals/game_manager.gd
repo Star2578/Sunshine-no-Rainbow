@@ -12,6 +12,29 @@ var player: Player = null
 var money: int = 0
 var base_enemy_hp: float = 10.0
 
+# Dictionary to hold the state of every upgrade
+# Key: ID, Value: {level, base_cost, cost_multiplier}
+var upgrades: Dictionary = {
+	"atk_speed": {
+		"title": "Attack Speed",
+		"level": 0, 
+		"cost": 10, 
+		"mult": 1.5
+	},
+	"bullet_dmg": {
+		"title": "Bullet Damage",
+		"level": 0, 
+		"cost": 25, 
+		"mult": 1.8
+	},
+	"auto_turret": {
+		"title": "Auto Turret",
+		"level": 0, 
+		"cost": 100, 
+		"mult": 2.0
+	}
+}
+
 func _process(delta: float):
 	if not is_start: return
 	
@@ -52,6 +75,38 @@ func get_clock_string():
 	# Format string to look like "12:05 PM"
 	return "%02d:%02d %s" % [display_hours, minutes, am_pm]
 
+func attempt_purchase(id: String) -> bool:
+	if not upgrades.has(id): return false
+	
+	var data = upgrades[id]
+	var current_cost = data["cost"]
+	
+	if money >= current_cost:
+		# 1. Pay the price
+		money -= current_cost
+		
+		# 2. Level up
+		data["level"] += 1
+		
+		# 3. Increase cost for next time (The "Inflation")
+		data["cost"] = int(current_cost * data["mult"])
+		
+		# 4. Apply the actual effect
+		apply_upgrade_effect(id)
+		
+		print("Bought ", id, ". New Level: ", data["level"])
+		return true
+		
+	return false
+
+func apply_upgrade_effect(id: String):
+	match id:
+		"atk_speed":
+			pass
+		"bullet_dmg":
+			pass
+		"auto_turret":
+			pass
 
 func get_current_enemy_hp():
 	return base_enemy_hp * pow(1.15, cycle_count)

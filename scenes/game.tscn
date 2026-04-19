@@ -8,8 +8,6 @@
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_lbhrr"]
 size = Vector2(100, 100)
 
-[sub_resource type="Theme" id="Theme_lbhrr"]
-
 [node name="game" type="Node2D" unique_id=975163929]
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=123177307]
@@ -25,6 +23,16 @@ grow_horizontal = 0
 grow_vertical = 2
 color = Color(0.18000486, 0.18000486, 0.18000486, 1)
 
+[node name="MoneyLabel" type="Label" parent="HUD/BG" unique_id=1570555184]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = -2.0
+offset_top = 160.0
+offset_right = 72.0
+offset_bottom = 183.0
+theme = ExtResource("1_yqjtg")
+text = "$0"
+
 [node name="Sun_Moon" type="VBoxContainer" parent="HUD/BG" unique_id=2032040448]
 layout_mode = 1
 anchors_preset = 5
@@ -38,6 +46,7 @@ grow_horizontal = 2
 [node name="Clock" type="Label" parent="HUD/BG/Sun_Moon" unique_id=836986482]
 unique_name_in_owner = true
 layout_mode = 2
+theme = ExtResource("1_yqjtg")
 text = "06:00 AM"
 horizontal_alignment = 1
 
@@ -45,40 +54,48 @@ horizontal_alignment = 1
 layout_mode = 2
 texture = SubResource("PlaceholderTexture2D_lbhrr")
 
-[node name="VScrollBar" type="VScrollBar" parent="HUD/BG" unique_id=1386518295]
-custom_minimum_size = Vector2(0, 500)
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -8.0
-grow_horizontal = 2
-grow_vertical = 0
-
-[node name="BackButton" type="Button" parent="HUD/BG/VScrollBar" unique_id=1069466043]
+[node name="BackButton" type="Button" parent="HUD/BG" unique_id=1069466043]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -45.0
-offset_bottom = 31.0
+offset_left = -56.0
+offset_top = 160.0
+offset_right = -6.0
+offset_bottom = 191.0
 grow_horizontal = 0
-theme = SubResource("Theme_lbhrr")
+theme = ExtResource("1_yqjtg")
 theme_type_variation = &"FlatButton"
 text = "Back"
 
-[node name="MainMenu" type="Control" parent="HUD/BG/VScrollBar" unique_id=1290896231]
+[node name="ScrollContainer" type="ScrollContainer" parent="HUD/BG" unique_id=466640826]
+custom_minimum_size = Vector2(0, 450)
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="UpgradeList" type="VBoxContainer" parent="HUD/BG/ScrollContainer" unique_id=1272708177]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MainMenu" type="Control" parent="HUD/BG" unique_id=1290896231]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = 148.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HUD/BG/VScrollBar/MainMenu" unique_id=225580303]
+[node name="VBoxContainer" type="VBoxContainer" parent="HUD/BG/MainMenu" unique_id=225580303]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -92,25 +109,25 @@ offset_bottom = 56.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="StartButton" type="Button" parent="HUD/BG/VScrollBar/MainMenu/VBoxContainer" unique_id=1277426022]
+[node name="StartButton" type="Button" parent="HUD/BG/MainMenu/VBoxContainer" unique_id=1277426022]
 layout_mode = 2
 theme = ExtResource("1_yqjtg")
 theme_type_variation = &"FlatButton"
 text = "Start"
 
-[node name="SettingsButton" type="Button" parent="HUD/BG/VScrollBar/MainMenu/VBoxContainer" unique_id=856582838]
+[node name="SettingsButton" type="Button" parent="HUD/BG/MainMenu/VBoxContainer" unique_id=856582838]
 layout_mode = 2
 theme = ExtResource("1_yqjtg")
 theme_type_variation = &"FlatButton"
 text = "Settings"
 
-[node name="QuitButton" type="Button" parent="HUD/BG/VScrollBar/MainMenu/VBoxContainer" unique_id=460646165]
+[node name="QuitButton" type="Button" parent="HUD/BG/MainMenu/VBoxContainer" unique_id=460646165]
 layout_mode = 2
 theme = ExtResource("1_yqjtg")
 theme_type_variation = &"FlatButton"
 text = "Quit"
 
-[node name="Settings" type="Control" parent="HUD/BG/VScrollBar" unique_id=2112714798]
+[node name="Settings" type="Control" parent="HUD/BG" unique_id=2112714798]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -119,10 +136,12 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
+offset_top = 74.0
+offset_bottom = 74.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HUD/BG/VScrollBar/Settings" unique_id=1101981031]
+[node name="VBoxContainer" type="VBoxContainer" parent="HUD/BG/Settings" unique_id=1101981031]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -136,16 +155,16 @@ offset_bottom = 25.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BGMContainer" type="HBoxContainer" parent="HUD/BG/VScrollBar/Settings/VBoxContainer" unique_id=1967752263]
+[node name="BGMContainer" type="HBoxContainer" parent="HUD/BG/Settings/VBoxContainer" unique_id=1967752263]
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="Label" type="Label" parent="HUD/BG/VScrollBar/Settings/VBoxContainer/BGMContainer" unique_id=923974964]
+[node name="Label" type="Label" parent="HUD/BG/Settings/VBoxContainer/BGMContainer" unique_id=923974964]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 text = "BGM"
 
-[node name="BGMSlider" type="HSlider" parent="HUD/BG/VScrollBar/Settings/VBoxContainer/BGMContainer" unique_id=1105525025]
+[node name="BGMSlider" type="HSlider" parent="HUD/BG/Settings/VBoxContainer/BGMContainer" unique_id=1105525025]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_vertical = 4
@@ -153,16 +172,16 @@ max_value = 1.0
 step = 0.01
 value = 0.5
 
-[node name="SFXContainer" type="HBoxContainer" parent="HUD/BG/VScrollBar/Settings/VBoxContainer" unique_id=1237617998]
+[node name="SFXContainer" type="HBoxContainer" parent="HUD/BG/Settings/VBoxContainer" unique_id=1237617998]
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="Label" type="Label" parent="HUD/BG/VScrollBar/Settings/VBoxContainer/SFXContainer" unique_id=224658738]
+[node name="Label" type="Label" parent="HUD/BG/Settings/VBoxContainer/SFXContainer" unique_id=224658738]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 text = "SFX"
 
-[node name="SFXSlider" type="HSlider" parent="HUD/BG/VScrollBar/Settings/VBoxContainer/SFXContainer" unique_id=400944433]
+[node name="SFXSlider" type="HSlider" parent="HUD/BG/Settings/VBoxContainer/SFXContainer" unique_id=400944433]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_vertical = 4
@@ -179,9 +198,9 @@ volume_db = 10.0
 autoplay = true
 bus = &"BGM"
 
-[connection signal="pressed" from="HUD/BG/VScrollBar/BackButton" to="HUD" method="_on_back_pressed"]
-[connection signal="pressed" from="HUD/BG/VScrollBar/MainMenu/VBoxContainer/StartButton" to="HUD" method="_on_start_pressed"]
-[connection signal="pressed" from="HUD/BG/VScrollBar/MainMenu/VBoxContainer/SettingsButton" to="HUD" method="_on_settings_pressed"]
-[connection signal="pressed" from="HUD/BG/VScrollBar/MainMenu/VBoxContainer/QuitButton" to="HUD" method="_on_quit_pressed"]
-[connection signal="value_changed" from="HUD/BG/VScrollBar/Settings/VBoxContainer/BGMContainer/BGMSlider" to="HUD" method="_on_bgm_slider_value_changed"]
-[connection signal="value_changed" from="HUD/BG/VScrollBar/Settings/VBoxContainer/SFXContainer/SFXSlider" to="HUD" method="_on_sfx_slider_value_changed"]
+[connection signal="pressed" from="HUD/BG/BackButton" to="HUD" method="_on_back_pressed"]
+[connection signal="pressed" from="HUD/BG/MainMenu/VBoxContainer/StartButton" to="HUD" method="_on_start_pressed"]
+[connection signal="pressed" from="HUD/BG/MainMenu/VBoxContainer/SettingsButton" to="HUD" method="_on_settings_pressed"]
+[connection signal="pressed" from="HUD/BG/MainMenu/VBoxContainer/QuitButton" to="HUD" method="_on_quit_pressed"]
+[connection signal="value_changed" from="HUD/BG/Settings/VBoxContainer/BGMContainer/BGMSlider" to="HUD" method="_on_bgm_slider_value_changed"]
+[connection signal="value_changed" from="HUD/BG/Settings/VBoxContainer/SFXContainer/SFXSlider" to="HUD" method="_on_sfx_slider_value_changed"]
