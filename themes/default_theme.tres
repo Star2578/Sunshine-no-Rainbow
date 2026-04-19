@@ -1,0 +1,7 @@
+[gd_resource type="Theme" format=3 uid="uid://bmjw06kteq7wo"]
+
+[ext_resource type="FontFile" uid="uid://drestuwiks08x" path="res://fonts/RobotoMono-VariableFont_wght.ttf" id="1_mlkpy"]
+
+[resource]
+default_font = ExtResource("1_mlkpy")
+default_font_size = 20

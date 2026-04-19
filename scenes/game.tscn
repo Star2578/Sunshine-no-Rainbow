@@ -1,0 +1,91 @@
+[gd_scene format=3 uid="uid://co82foa41irjx"]
+
+[ext_resource type="Script" uid="uid://cpljy2wi0jppd" path="res://scripts/hud.gd" id="1_lnu2h"]
+[ext_resource type="PackedScene" uid="uid://dqq5jl65vvvy2" path="res://scenes/player.tscn" id="1_uwrxv"]
+[ext_resource type="Theme" uid="uid://bmjw06kteq7wo" path="res://themes/default_theme.tres" id="1_yqjtg"]
+[ext_resource type="AudioStream" uid="uid://dyah6a7lbstxw" path="res://music/bgm/Ducko - Happy Stroll.wav" id="4_lbhrr"]
+
+[node name="game" type="Node2D" unique_id=975163929]
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=123177307]
+script = ExtResource("1_lnu2h")
+
+[node name="MainMenu" type="CanvasLayer" parent="HUD" unique_id=855422940]
+unique_name_in_owner = true
+
+[node name="StartButton" type="Button" parent="HUD/MainMenu" unique_id=1277426022]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -154.0
+offset_top = -70.5
+offset_right = 154.0
+offset_bottom = 70.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_yqjtg")
+theme_type_variation = &"FlatButton"
+theme_override_font_sizes/font_size = 100
+text = "Start"
+
+[node name="Settings" type="CanvasLayer" parent="HUD" unique_id=159695418]
+unique_name_in_owner = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HUD/Settings" unique_id=1101981031]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="BGMContainer" type="HBoxContainer" parent="HUD/Settings/VBoxContainer" unique_id=1967752263]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HUD/Settings/VBoxContainer/BGMContainer" unique_id=923974964]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+text = "BGM"
+
+[node name="BGMSlider" type="HSlider" parent="HUD/Settings/VBoxContainer/BGMContainer" unique_id=1105525025]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.01
+value = 0.5
+
+[node name="SFXContainer" type="HBoxContainer" parent="HUD/Settings/VBoxContainer" unique_id=1237617998]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HUD/Settings/VBoxContainer/SFXContainer" unique_id=224658738]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+text = "SFX"
+
+[node name="SFXSlider" type="HSlider" parent="HUD/Settings/VBoxContainer/SFXContainer" unique_id=400944433]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.01
+value = 0.5
+
+[node name="Player" parent="." unique_id=314711480 instance=ExtResource("1_uwrxv")]
+position = Vector2(576, 320)
+
+[node name="BGM" type="AudioStreamPlayer2D" parent="." unique_id=1107763342]
+stream = ExtResource("4_lbhrr")
+autoplay = true
+bus = &"BGM"
+
+[connection signal="pressed" from="HUD/MainMenu/StartButton" to="HUD" method="_on_start_pressed"]
+[connection signal="value_changed" from="HUD/Settings/VBoxContainer/BGMContainer/BGMSlider" to="HUD" method="_on_bgm_slider_value_changed"]
+[connection signal="value_changed" from="HUD/Settings/VBoxContainer/SFXContainer/SFXSlider" to="HUD" method="_on_sfx_slider_value_changed"]

@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://dyah6a7lbstxw"
+path="res://.godot/imported/Ducko - Happy Stroll.wav-82eb7a04df182d11c6f3ba0f72ff3e49.sample"
+
+[deps]
+
+source_file="res://music/bgm/Ducko - Happy Stroll.wav"
+dest_files=["res://.godot/imported/Ducko - Happy Stroll.wav-82eb7a04df182d11c6f3ba0f72ff3e49.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2
