@@ -53,18 +53,32 @@ func _process(_delta: float):
 		stats_text.text = GameManager.stats()
 		debug_text.text = GameManager.debug_stats()
 
+		%GameBackground.material.set_shader_parameter("health", GameManager.health / GameManager.max_health)
+
 		if GameManager.is_pause:
 			%Pause.show()
+			settings.show()
+			upgrade_list.hide()
 		else:
 			%Pause.hide()
-		
+			settings.hide()
+			upgrade_list.show()
+
+	if ui_stack.size() > 1:
+		%BackButton.show()
+	else:
+		%BackButton.hide()
+
+
 	if GameManager.is_over:
 		upgrade_list.hide()
 		%GameOver.show()
 		%Retry.show()
+	
 
 
 func _on_start_pressed():
+	GameManager.start()
 	# Close all menus and start game
 	for menu in ui_stack:
 		menu.hide()
@@ -94,8 +108,10 @@ func _on_retry_pressed():
 	get_tree().paused = false
 	%GameOver.hide()
 	%Retry.hide()
+	upgrade_list.show()
+	for child in upgrade_list.get_children():
+		child.queue_free()
 	_on_start_pressed()
-	GameManager.start()
 
 func _on_bgm_slider_value_changed(value: float):
 	var db_value = linear_to_db(value)
@@ -139,7 +155,7 @@ func _reveal_locked_upgrades(parent_id: String):
 func apply_upgrade_effect(id: String):
 	match id:
 		"money":
-			GameManager.money_per_kill += 3
+			GameManager.money_per_kill += 5
 		"max_hp":
 			var new_hp = GameManager.health / GameManager.max_health
 			GameManager.max_health += 5

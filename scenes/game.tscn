@@ -3,8 +3,15 @@
 [ext_resource type="Script" uid="uid://cpljy2wi0jppd" path="res://scripts/hud.gd" id="1_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://dqq5jl65vvvy2" path="res://scenes/player.tscn" id="1_uwrxv"]
 [ext_resource type="Theme" uid="uid://bmjw06kteq7wo" path="res://themes/default_theme.tres" id="1_yqjtg"]
+[ext_resource type="Shader" uid="uid://cflgyyp78b1re" path="res://shaders/damage.gdshader" id="2_p57ef"]
 [ext_resource type="AudioStream" uid="uid://dyah6a7lbstxw" path="res://music/bgm/Ducko - Happy Stroll.wav" id="4_lbhrr"]
 [ext_resource type="Shader" uid="uid://xebr6j6dmh05" path="res://shaders/sky.gdshader" id="5_iywne"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_u5sy4"]
+shader = ExtResource("2_p57ef")
+shader_parameter/health = 1.0
+shader_parameter/vignette_color = Color(0.5, 0, 0, 1)
+shader_parameter/pulse_speed = 4.0
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_lbhrr"]
 size = Vector2(100, 100)
@@ -19,13 +26,15 @@ shader_parameter/time_of_day = 6.0
 process_mode = 3
 script = ExtResource("1_lnu2h")
 
-[node name="Transparent" type="ColorRect" parent="HUD" unique_id=904534585]
+[node name="GameBackground" type="ColorRect" parent="HUD" unique_id=904534585]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_u5sy4")
 custom_minimum_size = Vector2(802, 648)
 offset_right = 802.0
 offset_bottom = 648.0
 color = Color(1, 1, 1, 0)
 
-[node name="DebugText" type="RichTextLabel" parent="HUD/Transparent" unique_id=419563577]
+[node name="DebugText" type="RichTextLabel" parent="HUD/GameBackground" unique_id=419563577]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(300, 400)
@@ -38,7 +47,7 @@ offset_bottom = 400.0
 grow_horizontal = 0
 bbcode_enabled = true
 
-[node name="Pause" type="Label" parent="HUD/Transparent" unique_id=770346396]
+[node name="Pause" type="Label" parent="HUD/GameBackground" unique_id=770346396]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -57,7 +66,7 @@ theme = ExtResource("1_yqjtg")
 theme_override_font_sizes/font_size = 50
 text = "PAUSED"
 
-[node name="GameOver" type="Control" parent="HUD/Transparent" unique_id=1353709684]
+[node name="GameOver" type="Control" parent="HUD/GameBackground" unique_id=1353709684]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -69,7 +78,7 @@ anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="GameOverText" type="Label" parent="HUD/Transparent/GameOver" unique_id=1599025754]
+[node name="GameOverText" type="Label" parent="HUD/GameBackground/GameOver" unique_id=1599025754]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -86,7 +95,7 @@ theme = ExtResource("1_yqjtg")
 theme_override_font_sizes/font_size = 50
 text = "GAME OVER"
 
-[node name="GameOver_Stats" type="RichTextLabel" parent="HUD/Transparent/GameOver" unique_id=228785604]
+[node name="GameOver_Stats" type="RichTextLabel" parent="HUD/GameBackground/GameOver" unique_id=228785604]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(300, 300)
 layout_mode = 1
@@ -146,6 +155,7 @@ layout_mode = 2
 texture = SubResource("PlaceholderTexture2D_lbhrr")
 
 [node name="BackButton" type="Button" parent="HUD/BG" unique_id=1069466043]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 1
 anchors_preset = 1
@@ -350,6 +360,7 @@ fit_content = true
 position = Vector2(416, 320)
 
 [node name="BGM" type="AudioStreamPlayer2D" parent="." unique_id=1107763342]
+process_mode = 3
 stream = ExtResource("4_lbhrr")
 volume_db = 10.0
 autoplay = true
@@ -373,5 +384,6 @@ color = Color(0.13682577, 0.13682574, 0.13682571, 1)
 [connection signal="pressed" from="HUD/BG/MainMenu/VBoxContainer/QuitButton" to="HUD" method="_on_quit_pressed"]
 [connection signal="value_changed" from="HUD/BG/Settings/VBoxContainer/BGMContainer/BGMSlider" to="HUD" method="_on_bgm_slider_value_changed"]
 [connection signal="value_changed" from="HUD/BG/Settings/VBoxContainer/SFXContainer/SFXSlider" to="HUD" method="_on_sfx_slider_value_changed"]
+[connection signal="pressed" from="HUD/BG/Settings/VBoxContainer/QuitButton" to="HUD" method="_on_quit_pressed"]
 [connection signal="pressed" from="HUD/BG/Retry/VBoxContainer/RetryButton" to="HUD" method="_on_retry_pressed"]
 [connection signal="pressed" from="HUD/BG/Retry/VBoxContainer/QuitButton" to="HUD" method="_on_quit_pressed"]

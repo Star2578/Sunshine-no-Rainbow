@@ -11,6 +11,7 @@ var time_speed: float = 0.05   # How many "in-game hours" pass per real second
 var cycle_count: int = 0
 
 var spawner: Spawner
+var hud: HUD
 
 # Player variables
 var player: Player = null
@@ -95,6 +96,9 @@ var upgrades: Dictionary = {
 		"requires": "auto_turret"
 	}
 }
+
+func _ready():
+	process_mode = Node.PROCESS_MODE_ALWAYS
 
 func _process(delta: float):
 	if not is_start: return
@@ -196,9 +200,8 @@ func get_spawn_interval():
 	return max(scaled_rate * time_factor, 0.1)
 
 func get_current_enemy_dmg():
-	# TODO : Grow too slow
-	var modifier = 1.2 if is_day else 0.7
-	return base_enemy_dmg * modifier * pow(1.1, cycle_count - 1)
+	var modifier = 1.2 if is_day else 0.88
+	return base_enemy_dmg * modifier * pow(1.2, cycle_count)
 
 func get_current_enemy_hp():
 	var cycle_mod = pow(1.15, cycle_count)
@@ -306,6 +309,7 @@ func _upgrade_lines():
 func pause():
 	is_pause = !is_pause
 	get_tree().paused = !get_tree().paused
+	print("is_pause ", is_pause)
 
 func start():
 	# Reset game state

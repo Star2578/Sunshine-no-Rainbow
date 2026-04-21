@@ -5,7 +5,7 @@
 [ext_resource type="Shader" uid="uid://ck6321dnbumga" path="res://shaders/bullet.gdshader" id="2_qhqgy"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_g2els"]
-radius = 63.07139
+radius = 52.499996
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_dqkch"]
 shader = ExtResource("2_qhqgy")
