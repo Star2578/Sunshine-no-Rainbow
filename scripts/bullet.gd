@@ -1,8 +1,10 @@
 extends Area2D
 class_name Bullet
 
-@export var speed: float = 600.0
 var is_active: bool = false
+
+var speed: float = 600.0
+var dmg: float
 
 func _physics_process(delta: float):
 	if not is_active:
@@ -26,7 +28,7 @@ func deactivate():
 
 func _on_bullet_hit(area: Area2D):
 	if area is Enemy:
-		area.deactivate()
+		area.receive_dmg(dmg)
 		deactivate()
 
 func _on_screen_exit():

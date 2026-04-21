@@ -5,41 +5,29 @@ var is_day: bool = true
 
 # Time variables
 var current_time: float = 6.0 # Start at 6:00 AM
-var time_speed: float = 0.1   # How many "in-game hours" pass per real second
+var time_speed: float = 0.05   # How many "in-game hours" pass per real second
 var cycle_count: int = 1
 
 # Player variables
 var player: Player = null
+var max_health: float = 10.0
+var health: float = 10.0
+var regen: float = 1.0
+var bullet_click_dmg: float = 5.0
+var bullet_auto_dmg: float = 2.0
+var money_per_kill: int = 10
 var money: int = 0
 
+# Enemy variables
 var base_enemy_hp: float = 10.0
-
-var weapons = {
-	"click_gun": {
-		"title": "Ion Pistol (Manual)",
-		"unlocked": true,
-		"stats": {"damage": 10.0, "speed": 1.0, "size": 1.0},
-		"upgrades": {
-			"dmg": {"title": "Power Cell", "level": 0, "cost": 10, "mult": 1.4},
-			"spd": {"title": "Trigger Link", "level": 0, "cost": 15, "mult": 1.3}
-		}
-	},
-	"turret_01": {
-		"title": "Auto-Sentry Alpha",
-		"unlocked": false, # Hidden until purchased or reached cycle
-		"stats": {"damage": 5.0, "speed": 0.5, "range": 300.0},
-		"upgrades": {
-			"dmg": {"title": "Sentry Barrels", "level": 0, "cost": 100, "mult": 1.6},
-			"spd": {"title": "Motor Overclock", "level": 0, "cost": 120, "mult": 1.5}
-		}
-	}
-}
+var base_enemy_dmg: float = 2.0
+var base_enemy_speed: float = 200.0
 
 # Dictionary to hold the state of every upgrade
 # Key: ID, Value: {level, base_cost, cost_multiplier}
 var upgrades: Dictionary = {
 	"money": {
-		"title": "Gold Per Kill",
+		"title": "Money Per Kill",
 		"level": 0, 
 		"cost": 10, 
 		"mult": 1.5
@@ -56,14 +44,14 @@ var upgrades: Dictionary = {
 		"cost": 10, 
 		"mult": 1.5
 	},
-	"atk_speed": {
-		"title": "Attack Speed",
-		"level": 0, 
-		"cost": 10, 
-		"mult": 1.5
-	},
 	"bullet_dmg": {
 		"title": "Bullet Damage",
+		"level": 0, 
+		"cost": 25, 
+		"mult": 1.8
+	},
+	"bullet_speed": {
+		"title": "Bullet Speed",
 		"level": 0, 
 		"cost": 25, 
 		"mult": 1.8
@@ -72,13 +60,36 @@ var upgrades: Dictionary = {
 		"title": "Auto Turret",
 		"level": 0, 
 		"cost": 100, 
-		"mult": 2.0
-	}
+		"mult": 2.0,
+		"one_time": true
+	},
+	"auto_turret_dmg": {
+		"title": "Turret Damage",
+		"level": 0, "cost": 50, "mult": 1.8,
+		"requires": "auto_turret"
+	},
+	"auto_turret_fire_rate": {
+		"title": "Turret Fire Rate",
+		"level": 0, "cost": 50, "mult": 1.8,
+		"requires": "auto_turret"
+	},
+	"auto_turret_bullet_speed": {
+		"title": "Turret Bullet Speed",
+		"level": 0, "cost": 40, "mult": 1.6,
+		"requires": "auto_turret"
+	},
 }
 
 func _process(delta: float):
 	if not is_start: return
-	
+
+	hp_regen(delta)
+	clock(delta)
+
+func hp_regen(delta: float):
+	health += regen * delta
+
+func clock(delta: float):
 	# Progress time
 	current_time += delta * time_speed
 	
@@ -132,24 +143,11 @@ func attempt_purchase(id: String) -> bool:
 		# 3. Increase cost for next time (The "Inflation")
 		data["cost"] = int(current_cost * data["mult"])
 		
-		# 4. Apply the actual effect
-		apply_upgrade_effect(id)
-		
 		print("Bought ", id, ". New Level: ", data["level"])
 		return true
 	return false
 
-func apply_upgrade_effect(id: String):
-	match id:
-		"atk_speed":
-			pass
-		"bullet_dmg":
-			pass
-		"auto_turret":
-			pass
-
 func get_spawn_interval():
-	# TODO : This is bad design, need rework
 	var base_rate = 1.0
 	
 	# 1. Scaling: Make it faster every cycle (e.g., 5% faster per cycle)
@@ -174,9 +172,17 @@ func get_spawn_interval():
 	# Final clamping to prevent it from going to 0 (which would crash the game)
 	return max(scaled_rate * time_factor, 0.1)
 
+func get_current_enemy_dmg():
+	var modifier = 1.2 if is_day else 0.7
+	return base_enemy_dmg * modifier * pow(1.1, cycle_count - 1)
+
 func get_current_enemy_hp():
-	return base_enemy_hp * pow(1.15, cycle_count)
+	var modifier = 1.0 if is_day else 0.6   # night = less HP
+	return base_enemy_hp * modifier * pow(1.15, cycle_count)
 
 func get_current_enemy_speed():
-	var modifier = 1.2 if is_day else 0.8
-	return 200.0 * modifier * (1.05 ** cycle_count)
+	return base_enemy_speed
+
+func get_money_for_kill():
+	var modifier = 1 if is_day else 2        # night = double money
+	return int(money_per_kill * modifier)

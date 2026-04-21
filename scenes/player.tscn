@@ -7,6 +7,7 @@
 radius = 63.07139
 
 [node name="Player" type="Area2D" unique_id=580082574]
+scale = Vector2(0.4, 0.4)
 script = ExtResource("1_g2els")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=206907324]

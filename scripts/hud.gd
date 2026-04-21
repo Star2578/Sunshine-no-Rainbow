@@ -52,6 +52,9 @@ func _on_start_pressed():
 
 	for id in GameManager.upgrades:
 		var data = GameManager.upgrades[id]
+		# Skip locked child upgrades at start
+		if data.has("requires"):
+			continue
 		create_upgrade_ui(id, data["title"], data["cost"])
 
 	ui_stack.clear()
@@ -87,13 +90,45 @@ func create_upgrade_ui(id: String, title: String, cost: int):
 	item.purchased.connect(_on_upgrade_bought)
 
 func _on_upgrade_bought(id: String):
-	print("Player wants to buy: ", id)
-	# Ask GameManager if we have enough money
 	if GameManager.attempt_purchase(id):
-		# Update the UI after a successful buy
+		apply_upgrade_effect(id)
 		var new_data = GameManager.upgrades[id]
-		
 		for child in upgrade_list.get_children():
 			if child is UpgradeItem and child.upgrade_id == id:
-				child.update_ui(new_data["level"], new_data["cost"])
+				# One-time upgrade: destroy the button after buying
+				if new_data.get("one_time", false):
+					child.queue_free()
+				else:
+					child.update_ui(new_data["level"], new_data["cost"])
 				break
+
+func _reveal_locked_upgrades(parent_id: String):
+	for id in GameManager.upgrades:
+		var data = GameManager.upgrades[id]
+		if data.get("requires", "") == parent_id:
+			create_upgrade_ui(id, data["title"], data["cost"])
+
+func apply_upgrade_effect(id: String):
+	match id:
+		"money":
+			GameManager.money_per_kill += 5
+		"max_hp":
+			var new_hp = GameManager.health / GameManager.max_health
+			GameManager.max_health += 10
+			GameManager.health = new_hp * GameManager.max_health
+		"hp_regen":
+			pass
+		"bullet_dmg":
+			GameManager.bullet_click_dmg += 2.0
+		"bullet_speed":
+			# Update bullet speed via player reference
+			GameManager.player.set_bullet_speed(50.0)
+		"auto_turret":
+			GameManager.player.enable_auto_turret()
+			_reveal_locked_upgrades("auto_turret")
+		"auto_turret_dmg":
+			GameManager.bullet_auto_dmg += 2.0
+		"auto_turret_fire_rate":
+			GameManager.player.auto_fire_rate = max(0.1, GameManager.player.auto_fire_rate - 0.1)
+		"auto_turret_bullet_speed":
+			GameManager.player.auto_bullet_speed += 50.0

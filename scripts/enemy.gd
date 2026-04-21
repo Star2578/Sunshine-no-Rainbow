@@ -1,8 +1,15 @@
 extends Area2D
 class_name Enemy
 
-@export var speed: float = 150.0
 var is_active: bool = false
+
+var speed: float
+var hp: float
+
+func _ready():
+	add_to_group("enemies")
+	speed = GameManager.get_current_enemy_speed()
+	hp = GameManager.get_current_enemy_hp()
 
 func _physics_process(delta: float):
 	if not is_active: return
@@ -31,8 +38,19 @@ func deactivate():
 	if has_node("CollisionShape2D"):
 		get_node("CollisionShape2D").set_deferred("disabled", true)
 
+func receive_dmg(dmg: float):
+	hp -= dmg
+	if hp <= 0:
+		GameManager.money += GameManager.get_money_for_kill()
+		deactivate()
 
 func _on_area_entered(area: Area2D):
 	if area == GameManager.player:
-		# TODO : Deal damage or trigger game over
+		GameManager.health -= GameManager.get_current_enemy_dmg()
 		deactivate()
+
+		if GameManager.health <= 0:
+			GameManager.health = 0
+			
+			print("Game Over")
+			get_tree().paused = true
