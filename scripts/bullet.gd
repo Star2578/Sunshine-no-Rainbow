@@ -1,10 +1,15 @@
 extends Area2D
 class_name Bullet
 
+@onready var shoot_sfx: AudioStreamPlayer2D = %ShootBulletSFX
+
 var is_active: bool = false
 
-var speed: float = 600.0
+var speed: float
 var dmg: float
+
+func _ready():
+	speed = GameManager.bullet_speed
 
 func _physics_process(delta: float):
 	if not is_active:
@@ -14,6 +19,7 @@ func _physics_process(delta: float):
 
 func fire():
 	is_active = true
+	shoot_sfx.play()
 	show()
 	process_mode = PROCESS_MODE_INHERIT
 	if has_node("CollisionShape2D"):

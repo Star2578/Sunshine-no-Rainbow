@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://dvdrewkkxbdms" path="res://scripts/bullet.gd" id="1_y25gk"]
 [ext_resource type="Shader" uid="uid://ck6321dnbumga" path="res://shaders/bullet.gdshader" id="2_l5glv"]
 [ext_resource type="Texture2D" uid="uid://c16ec7fwceihk" path="res://sprites/circle.png" id="2_y25gk"]
+[ext_resource type="AudioStream" uid="uid://dg13rw0ttnmpv" path="res://music/sfx/Abstract1.wav" id="4_qncy5"]
+[ext_resource type="AudioStream" uid="uid://cuhtoilbvpsyy" path="res://music/sfx/Abstract2.wav" id="5_tamys"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_l5glv"]
 radius = 45.0
@@ -10,6 +12,12 @@ radius = 45.0
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_eoqba"]
 shader = ExtResource("2_l5glv")
 shader_parameter/pressure = 0.0
+shader_parameter/time_offset = 0.0
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_26lx3"]
+streams_count = 2
+stream_0/stream = ExtResource("4_qncy5")
+stream_1/stream = ExtResource("5_tamys")
 
 [node name="Bullet" type="Area2D" unique_id=436873160]
 scale = Vector2(0.5, 0.5)
@@ -27,6 +35,11 @@ texture = ExtResource("2_y25gk")
 
 [node name="GPUParticles2D" type="GPUParticles2D" parent="." unique_id=784506521]
 emitting = false
+
+[node name="ShootBulletSFX" type="AudioStreamPlayer2D" parent="." unique_id=1899355392]
+unique_name_in_owner = true
+stream = SubResource("AudioStreamRandomizer_26lx3")
+volume_db = 10.0
 
 [connection signal="area_entered" from="." to="." method="_on_bullet_hit"]
 [connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_screen_exit"]

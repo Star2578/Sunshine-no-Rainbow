@@ -57,7 +57,7 @@ func _on_area_entered(area: Area2D):
 		deactivate()
 		if GameManager.health <= 0:
 			GameManager.health = 0
-			get_tree().call_group("hud", "trigger_game_over")
+			GameManager.game_over()
 
 # ----------------------------------------------------------
 # SHADER

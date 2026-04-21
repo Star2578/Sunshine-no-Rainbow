@@ -65,4 +65,6 @@ process_material = SubResource("ParticleProcessMaterial_5uy6h")
 emitting = false
 process_material = SubResource("ParticleProcessMaterial_c4w8v")
 
+[node name="DeadSFX" type="AudioStreamPlayer2D" parent="." unique_id=1798338735]
+
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]

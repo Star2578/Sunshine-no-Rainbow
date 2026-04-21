@@ -16,6 +16,7 @@ shader_parameter/time_of_day = 6.0
 [node name="game" type="Node2D" unique_id=975163929]
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=123177307]
+process_mode = 3
 script = ExtResource("1_lnu2h")
 
 [node name="Transparent" type="ColorRect" parent="HUD" unique_id=904534585]
@@ -26,6 +27,7 @@ color = Color(1, 1, 1, 0)
 
 [node name="DebugText" type="RichTextLabel" parent="HUD/Transparent" unique_id=419563577]
 unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(300, 400)
 layout_mode = 1
 anchors_preset = 1
@@ -34,6 +36,72 @@ anchor_right = 1.0
 offset_left = -300.0
 offset_bottom = 400.0
 grow_horizontal = 0
+bbcode_enabled = true
+
+[node name="Pause" type="Label" parent="HUD/Transparent" unique_id=770346396]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -73.0
+offset_top = -36.0
+offset_right = 107.0
+offset_bottom = 31.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_yqjtg")
+theme_override_font_sizes/font_size = 50
+text = "PAUSED"
+
+[node name="GameOver" type="Control" parent="HUD/Transparent" unique_id=1353709684]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GameOverText" type="Label" parent="HUD/Transparent/GameOver" unique_id=1599025754]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -121.0
+offset_top = -212.0
+offset_right = 149.0
+offset_bottom = -145.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_yqjtg")
+theme_override_font_sizes/font_size = 50
+text = "GAME OVER"
+
+[node name="GameOver_Stats" type="RichTextLabel" parent="HUD/Transparent/GameOver" unique_id=228785604]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 300)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -137.0
+offset_top = -116.0
+offset_right = 163.0
+offset_bottom = 184.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_yqjtg")
 bbcode_enabled = true
 
 [node name="BG" type="ColorRect" parent="HUD" unique_id=1507932139]
@@ -50,9 +118,9 @@ color = Color(0.18000486, 0.18000486, 0.18000486, 1)
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = -2.0
-offset_top = 160.0
+offset_top = 128.0
 offset_right = 72.0
-offset_bottom = 183.0
+offset_bottom = 155.0
 theme = ExtResource("1_yqjtg")
 text = "$0"
 
@@ -83,17 +151,17 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -56.0
-offset_top = 160.0
+offset_left = -62.0
+offset_top = 128.0
 offset_right = -6.0
-offset_bottom = 191.0
+offset_bottom = 163.0
 grow_horizontal = 0
 theme = ExtResource("1_yqjtg")
 theme_type_variation = &"FlatButton"
 text = "Back"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="HUD/BG" unique_id=466640826]
-custom_minimum_size = Vector2(0, 450)
+custom_minimum_size = Vector2(0, 320)
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -131,6 +199,7 @@ offset_right = 52.0
 offset_bottom = 56.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 16
 
 [node name="StartButton" type="Button" parent="HUD/BG/MainMenu/VBoxContainer" unique_id=1277426022]
 layout_mode = 2
@@ -159,8 +228,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_top = 74.0
-offset_bottom = 74.0
+offset_left = -1.0
+offset_top = 44.0
+offset_right = -1.0
+offset_bottom = 44.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -177,6 +248,7 @@ offset_right = 172.0
 offset_bottom = 25.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 6
 
 [node name="BGMContainer" type="HBoxContainer" parent="HUD/BG/Settings/VBoxContainer" unique_id=1967752263]
 layout_mode = 2
@@ -185,6 +257,7 @@ size_flags_horizontal = 4
 [node name="Label" type="Label" parent="HUD/BG/Settings/VBoxContainer/BGMContainer" unique_id=923974964]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
+theme = ExtResource("1_yqjtg")
 text = "BGM"
 
 [node name="BGMSlider" type="HSlider" parent="HUD/BG/Settings/VBoxContainer/BGMContainer" unique_id=1105525025]
@@ -202,6 +275,7 @@ size_flags_horizontal = 4
 [node name="Label" type="Label" parent="HUD/BG/Settings/VBoxContainer/SFXContainer" unique_id=224658738]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
+theme = ExtResource("1_yqjtg")
 text = "SFX"
 
 [node name="SFXSlider" type="HSlider" parent="HUD/BG/Settings/VBoxContainer/SFXContainer" unique_id=400944433]
@@ -211,6 +285,66 @@ size_flags_vertical = 4
 max_value = 1.0
 step = 0.01
 value = 0.5
+
+[node name="QuitButton" type="Button" parent="HUD/BG/Settings/VBoxContainer" unique_id=784241037]
+layout_mode = 2
+theme = ExtResource("1_yqjtg")
+theme_type_variation = &"FlatButton"
+text = "Quit"
+
+[node name="Retry" type="Control" parent="HUD/BG" unique_id=1629075668]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HUD/BG/Retry" unique_id=101814178]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -49.0
+offset_top = -20.0
+offset_right = 55.0
+offset_bottom = 93.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 16
+
+[node name="RetryButton" type="Button" parent="HUD/BG/Retry/VBoxContainer" unique_id=748674244]
+layout_mode = 2
+theme = ExtResource("1_yqjtg")
+theme_type_variation = &"FlatButton"
+text = "Retry"
+
+[node name="QuitButton" type="Button" parent="HUD/BG/Retry/VBoxContainer" unique_id=1385540351]
+layout_mode = 2
+theme = ExtResource("1_yqjtg")
+theme_type_variation = &"FlatButton"
+text = "Quit"
+
+[node name="Stats" type="RichTextLabel" parent="HUD/BG" unique_id=1499994790]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -175.0
+offset_top = 160.0
+offset_right = 175.0
+offset_bottom = 310.0
+grow_horizontal = 2
+theme = ExtResource("1_yqjtg")
+theme_override_font_sizes/normal_font_size = 12
+bbcode_enabled = true
+fit_content = true
 
 [node name="Player" parent="." unique_id=314711480 instance=ExtResource("1_uwrxv")]
 position = Vector2(416, 320)
@@ -239,3 +373,5 @@ color = Color(0.13682577, 0.13682574, 0.13682571, 1)
 [connection signal="pressed" from="HUD/BG/MainMenu/VBoxContainer/QuitButton" to="HUD" method="_on_quit_pressed"]
 [connection signal="value_changed" from="HUD/BG/Settings/VBoxContainer/BGMContainer/BGMSlider" to="HUD" method="_on_bgm_slider_value_changed"]
 [connection signal="value_changed" from="HUD/BG/Settings/VBoxContainer/SFXContainer/SFXSlider" to="HUD" method="_on_sfx_slider_value_changed"]
+[connection signal="pressed" from="HUD/BG/Retry/VBoxContainer/RetryButton" to="HUD" method="_on_retry_pressed"]
+[connection signal="pressed" from="HUD/BG/Retry/VBoxContainer/QuitButton" to="HUD" method="_on_quit_pressed"]

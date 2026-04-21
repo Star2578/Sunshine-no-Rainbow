@@ -3,9 +3,12 @@ class_name HUD
 
 @onready var main_menu: Control = %MainMenu
 @onready var settings: Control = %Settings
+@onready var retry: Control = %Retry
 @onready var upgrade_list: BoxContainer = %UpgradeList
 @onready var money_label: Label = %MoneyLabel
+@onready var stats_text: RichTextLabel = %Stats
 @onready var debug_text: RichTextLabel = %DebugText
+@onready var gameover_text: RichTextLabel = %GameOver_Stats
 
 var ui_stack: Array[Control] = []
 
@@ -43,10 +46,23 @@ func go_back():
 
 func _process(_delta: float):
 	if GameManager.is_start:
-		clock.text = GameManager.get_clock_string()
+		var phase = "DAY" if GameManager.is_day else "NIGHT"
+		clock.text = phase + " " + str(GameManager.cycle_count) + " " + GameManager.get_clock_string()
 		money_label.text = "$" + str(GameManager.money)
 
+		stats_text.text = GameManager.stats()
 		debug_text.text = GameManager.debug_stats()
+
+		if GameManager.is_pause:
+			%Pause.show()
+		else:
+			%Pause.hide()
+		
+	if GameManager.is_over:
+		upgrade_list.hide()
+		%GameOver.show()
+		%Retry.show()
+
 
 func _on_start_pressed():
 	# Close all menus and start game
@@ -71,6 +87,15 @@ func _on_quit_pressed():
 
 func _on_back_pressed():
 	go_back()
+
+func _on_retry_pressed():
+	GameManager.is_start = true
+	GameManager.is_over = false
+	get_tree().paused = false
+	%GameOver.hide()
+	%Retry.hide()
+	_on_start_pressed()
+	GameManager.start()
 
 func _on_bgm_slider_value_changed(value: float):
 	var db_value = linear_to_db(value)
@@ -114,26 +139,28 @@ func _reveal_locked_upgrades(parent_id: String):
 func apply_upgrade_effect(id: String):
 	match id:
 		"money":
-			GameManager.money_per_kill += 5
+			GameManager.money_per_kill += 3
 		"max_hp":
 			var new_hp = GameManager.health / GameManager.max_health
-			GameManager.max_health += 10
+			GameManager.max_health += 5
 			GameManager.health = new_hp * GameManager.max_health
 		"hp_regen":
-			GameManager.regen += 2.0
+			GameManager.regen += 0.3
 		"bullet_dmg":
-			GameManager.bullet_click_dmg += 2.0
+			GameManager.click_dmg += 2.0
+			GameManager.auto_dmg += 1.0
 		"bullet_speed":
 			# Update bullet speed via player reference
 			GameManager.player.set_bullet_speed(50.0)
 		"auto_turret":
+			GameManager.auto_turret_enabled = true
 			GameManager.player.enable_auto_turret()
 			_reveal_locked_upgrades("auto_turret")
 		"auto_turret_dmg":
-			GameManager.bullet_auto_dmg += 2.0
+			GameManager.auto_dmg += 2.0
 		"auto_turret_fire_rate":
-			GameManager.player.auto_fire_rate = max(0.1, GameManager.player.auto_fire_rate - 0.1)
+			GameManager.auto_fire_rate = max(0.2, GameManager.auto_fire_rate - 0.15)
 		"auto_turret_bullet_speed":
-			GameManager.player.auto_bullet_speed += 50.0
+			GameManager.auto_bullet_speed += 50.0
 		"auto_turret_targets":
-			GameManager.player.auto_turret_targets += 1
+			GameManager.auto_targets += 1
