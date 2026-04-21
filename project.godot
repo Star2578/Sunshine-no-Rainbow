@@ -29,6 +29,10 @@ Spawner="*uid://b4bnayv7mo03s"
 window/size/mode=3
 window/stretch/mode="canvas_items"
 
+[global_group]
+
+background=""
+
 [physics]
 
 3d/physics_engine="Jolt Physics"

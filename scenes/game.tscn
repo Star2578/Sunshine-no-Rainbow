@@ -4,9 +4,14 @@
 [ext_resource type="PackedScene" uid="uid://dqq5jl65vvvy2" path="res://scenes/player.tscn" id="1_uwrxv"]
 [ext_resource type="Theme" uid="uid://bmjw06kteq7wo" path="res://themes/default_theme.tres" id="1_yqjtg"]
 [ext_resource type="AudioStream" uid="uid://dyah6a7lbstxw" path="res://music/bgm/Ducko - Happy Stroll.wav" id="4_lbhrr"]
+[ext_resource type="Shader" uid="uid://xebr6j6dmh05" path="res://shaders/sky.gdshader" id="5_iywne"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_lbhrr"]
 size = Vector2(100, 100)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_p57ef"]
+shader = ExtResource("5_iywne")
+shader_parameter/time_of_day = 6.0
 
 [node name="game" type="Node2D" unique_id=975163929]
 
@@ -215,6 +220,18 @@ stream = ExtResource("4_lbhrr")
 volume_db = 10.0
 autoplay = true
 bus = &"BGM"
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=828959173]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=347533140]
+layer = -1
+
+[node name="GameBG" type="ColorRect" parent="CanvasLayer" unique_id=1064161147 groups=["background"]]
+material = SubResource("ShaderMaterial_p57ef")
+custom_minimum_size = Vector2(802, 648)
+offset_right = 802.0
+offset_bottom = 648.0
+color = Color(0.13682577, 0.13682574, 0.13682571, 1)
 
 [connection signal="pressed" from="HUD/BG/BackButton" to="HUD" method="_on_back_pressed"]
 [connection signal="pressed" from="HUD/BG/MainMenu/VBoxContainer/StartButton" to="HUD" method="_on_start_pressed"]

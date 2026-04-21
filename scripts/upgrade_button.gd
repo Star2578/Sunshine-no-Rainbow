@@ -30,6 +30,6 @@ func _on_buy_button_pressed():
 	purchased.emit(upgrade_id)
 
 func update_ui(new_level: int, new_cost: int):
-	level_label.text = "Lv. " + str(new_level)
+	level_label.text = "Lv." + str(new_level)
 	current_cost = new_cost
 	buy_button.text = "$" + str(new_cost)

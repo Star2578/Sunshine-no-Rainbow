@@ -101,6 +101,10 @@ func clock(delta: float):
 	else:
 		is_day = false
 
+	var bg = get_tree().get_first_node_in_group("background")
+	if bg:
+		bg.material.set_shader_parameter("time_of_day", current_time)
+
 	var int_hour = int(current_time)
 	if (int_hour == 12 or int_hour == 0):
 		trigger_special_event()
