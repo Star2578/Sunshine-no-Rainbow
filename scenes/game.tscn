@@ -13,6 +13,24 @@ size = Vector2(100, 100)
 [node name="HUD" type="CanvasLayer" parent="." unique_id=123177307]
 script = ExtResource("1_lnu2h")
 
+[node name="Transparent" type="ColorRect" parent="HUD" unique_id=904534585]
+custom_minimum_size = Vector2(802, 648)
+offset_right = 802.0
+offset_bottom = 648.0
+color = Color(1, 1, 1, 0)
+
+[node name="DebugText" type="RichTextLabel" parent="HUD/Transparent" unique_id=419563577]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 400)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -300.0
+offset_bottom = 400.0
+grow_horizontal = 0
+bbcode_enabled = true
+
 [node name="BG" type="ColorRect" parent="HUD" unique_id=1507932139]
 custom_minimum_size = Vector2(350, 0)
 anchors_preset = 11

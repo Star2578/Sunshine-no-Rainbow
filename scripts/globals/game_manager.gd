@@ -6,7 +6,7 @@ var is_day: bool = true
 # Time variables
 var current_time: float = 6.0 # Start at 6:00 AM
 var time_speed: float = 0.05   # How many "in-game hours" pass per real second
-var cycle_count: int = 1
+var cycle_count: int = 0
 
 # Player variables
 var player: Player = null
@@ -22,6 +22,7 @@ var money: int = 0
 var base_enemy_hp: float = 10.0
 var base_enemy_dmg: float = 2.0
 var base_enemy_speed: float = 200.0
+var mutation_rate: float = 0.25  # tune this: 0.1 = slow creep, 0.5 = fast madness
 
 # Dictionary to hold the state of every upgrade
 # Key: ID, Value: {level, base_cost, cost_multiplier}
@@ -87,7 +88,7 @@ func _process(delta: float):
 	clock(delta)
 
 func hp_regen(delta: float):
-	health += regen * delta
+	health = min(max_health, health + regen * delta)
 
 func clock(delta: float):
 	# Progress time
@@ -186,3 +187,68 @@ func get_current_enemy_speed():
 func get_money_for_kill():
 	var modifier = 1 if is_day else 2        # night = double money
 	return int(money_per_kill * modifier)
+
+func get_enemy_hue_seed():
+	return cycle_count * 0.618033988  # unbounded golden ratio drift
+
+func get_enemy_mutation():
+	# clamped at 1.0 so shader params stay predictable
+	var cycle_contribution = (cycle_count - 1) * mutation_rate
+	return clamp(cycle_contribution, 0.0, 1.0)
+
+func debug_stats():
+	var m = get_enemy_mutation()
+	var h = get_enemy_hue_seed()
+	var phase = "[color=yellow]DAY[/color]" if is_day else "[color=cyan]NIGHT[/color]"
+
+	var debug_string = """[b]── WORLD ──[/b]
+	[color=gray]Clock[/color]       %s  %s
+	[color=gray]Cycle[/color]       %d
+	[color=gray]Spawn rate[/color]  %.2fs
+	
+	[b]── PLAYER ──[/b]
+	[color=gray]HP[/color]          %.1f / %.1f
+	[color=gray]Regen[/color]       %.2f/s
+	[color=gray]Money[/color]       $%d  (+$%d/kill)
+	[color=gray]Click dmg[/color]   %.1f
+	[color=gray]Auto dmg[/color]    %.1f
+	
+	[b]── ENEMY ──[/b]
+	[color=gray]HP[/color]          %.1f
+	[color=gray]Dmg[/color]         %.1f
+	[color=gray]Speed[/color]       %.1f
+	[color=gray]Mutation[/color]    %.2f  [color=green]%s[/color]
+	[color=gray]Hue seed[/color]    %.3f
+	
+	[b]── UPGRADES ──[/b]
+	%s""" % [
+			get_clock_string(), phase,
+			cycle_count,
+			get_spawn_interval(),
+			health, max_health,
+			regen,
+			money, get_money_for_kill(),
+			bullet_click_dmg,
+			bullet_auto_dmg,
+			get_current_enemy_hp(),
+			get_current_enemy_dmg(),
+			get_current_enemy_speed(),
+			m, _mutation_bar(m),
+			h,
+			_upgrade_lines()
+		]
+
+	return debug_string
+
+func _mutation_bar(m: float):
+	var filled = int(m * 10)
+	return "[" + "█".repeat(filled) + "░".repeat(10 - filled) + "]"
+
+func _upgrade_lines():
+	var lines = ""
+	for id in upgrades:
+		var d = upgrades[id]
+		var cost_str = "$%d" % d["cost"]
+		var locked = " [color=gray](locked)[/color]" if d.get("requires", "") != "" and upgrades[d.get("requires", "")]["level"] == 0 else ""
+		lines += "[color=gray]%-24s[/color] Lv.%d  %s%s\n" % [d["title"], d["level"], cost_str, locked]
+	return lines

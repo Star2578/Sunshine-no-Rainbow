@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dqq5jl65vvvy2"]
 
-[ext_resource type="Texture2D" uid="uid://ccn4no5hyjbn5" path="res://icon.svg" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://d2kgdenecjfmb" path="res://scripts/player.gd" id="1_g2els"]
+[ext_resource type="Texture2D" uid="uid://c16ec7fwceihk" path="res://sprites/circle.png" id="2_g2els"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_g2els"]
 radius = 63.07139
@@ -15,4 +15,4 @@ shape = SubResource("CircleShape2D_g2els")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1883255769]
 z_index = 10
-texture = ExtResource("1_3vyb7")
+texture = ExtResource("2_g2els")

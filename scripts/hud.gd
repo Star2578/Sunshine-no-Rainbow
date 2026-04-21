@@ -5,6 +5,7 @@ class_name HUD
 @onready var settings: Control = %Settings
 @onready var upgrade_list: BoxContainer = %UpgradeList
 @onready var money_label: Label = %MoneyLabel
+@onready var debug_text: RichTextLabel = %DebugText
 
 var ui_stack: Array[Control] = []
 
@@ -44,6 +45,8 @@ func _process(_delta: float):
 	if GameManager.is_start:
 		clock.text = GameManager.get_clock_string()
 		money_label.text = "$" + str(GameManager.money)
+
+		debug_text.text = GameManager.debug_stats()
 
 func _on_start_pressed():
 	# Close all menus and start game
@@ -117,7 +120,7 @@ func apply_upgrade_effect(id: String):
 			GameManager.max_health += 10
 			GameManager.health = new_hp * GameManager.max_health
 		"hp_regen":
-			pass
+			GameManager.regen += 2.0
 		"bullet_dmg":
 			GameManager.bullet_click_dmg += 2.0
 		"bullet_speed":

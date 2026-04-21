@@ -1,10 +1,41 @@
 [gd_scene format=3 uid="uid://c5mhdqrcssd13"]
 
-[ext_resource type="Texture2D" uid="uid://ccn4no5hyjbn5" path="res://icon.svg" id="1_7p1mj"]
 [ext_resource type="Script" uid="uid://c8d4rgyyeph2j" path="res://scripts/enemy.gd" id="1_md0e3"]
+[ext_resource type="Shader" uid="uid://bpt808ifsxi4k" path="res://shaders/enemy.gdshader" id="2_4ra3w"]
+[ext_resource type="Texture2D" uid="uid://5fididyhmp0o" path="res://sprites/sun.png" id="2_md0e3"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_7p1mj"]
 radius = 54.037025
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5uy6h"]
+shader = ExtResource("2_4ra3w")
+shader_parameter/mutation = 0.0
+shader_parameter/hue_seed = 0.0
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_4ra3w"]
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 80.0
+spread = 180.0
+initial_velocity_min = 60.0
+initial_velocity_max = 140.0
+angular_velocity_min = -90.000015
+angular_velocity_max = 89.999985
+gravity = Vector3(0, 0, 0)
+damping_min = 80.0
+damping_max = 120.00001
+scale_min = 2.0
+scale_max = 4.0
+turbulence_enabled = true
+turbulence_noise_strength = 1.2
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_5uy6h"]
+particle_flag_disable_z = true
+gravity = Vector3(0, 98, 0)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_c4w8v"]
+particle_flag_disable_z = true
+gravity = Vector3(0, 98, 0)
 
 [node name="Enemy" type="Area2D" unique_id=1626529382 groups=["Enemy"]]
 scale = Vector2(0.3, 0.3)
@@ -14,8 +45,23 @@ script = ExtResource("1_md0e3")
 shape = SubResource("CircleShape2D_7p1mj")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1774676001]
-modulate = Color(0.8086155, 0.34285742, 0.11973462, 1)
-scale = Vector2(0.7, 0.7)
-texture = ExtResource("1_7p1mj")
+material = SubResource("ShaderMaterial_5uy6h")
+texture = ExtResource("2_md0e3")
+
+[node name="SparksParticles" type="GPUParticles2D" parent="." unique_id=566456775]
+emitting = false
+amount = 16
+lifetime = 0.9
+explosiveness = 0.2
+randomness = 0.6
+process_material = SubResource("ParticleProcessMaterial_4ra3w")
+
+[node name="GlitterParticles" type="GPUParticles2D" parent="." unique_id=189947400]
+emitting = false
+process_material = SubResource("ParticleProcessMaterial_5uy6h")
+
+[node name="OrbitParticles" type="GPUParticles2D" parent="." unique_id=422326621]
+emitting = false
+process_material = SubResource("ParticleProcessMaterial_c4w8v")
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]

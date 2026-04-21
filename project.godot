@@ -24,6 +24,11 @@ buses/default_bus_layout="uid://cmpdhiralwjdy"
 GameManager="*uid://bgaaghrxfc4eh"
 Spawner="*uid://b4bnayv7mo03s"
 
+[display]
+
+window/size/mode=3
+window/stretch/mode="canvas_items"
+
 [physics]
 
 3d/physics_engine="Jolt Physics"
