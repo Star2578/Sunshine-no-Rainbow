@@ -182,7 +182,8 @@ func get_current_enemy_hp():
 	return base_enemy_hp * modifier * pow(1.15, cycle_count)
 
 func get_current_enemy_speed():
-	return base_enemy_speed
+	var modifier = 1.1 if is_day else 0.9
+	return base_enemy_speed * modifier * pow(1.1, cycle_count)
 
 func get_money_for_kill():
 	var modifier = 1 if is_day else 2        # night = double money

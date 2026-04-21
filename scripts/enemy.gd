@@ -30,6 +30,8 @@ func spawn(start_pos: Vector2):
 		get_node("CollisionShape2D").set_deferred("disabled", false)
 	if GameManager.player:
 		look_at(GameManager.player.global_position)
+	var mat = $Sprite2D.material as ShaderMaterial
+	mat.set_shader_parameter("time_offset", randf() * 100.0)  # large range so they're well spread
 	_apply_shader_params()
 
 func deactivate():

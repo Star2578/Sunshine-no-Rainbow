@@ -54,6 +54,16 @@ func shoot():
 
 	pool_index = (pool_index + 1) % bullet_pool.size()
 
+	# Set pressure from damage upgrade level
+	var dmg_level = GameManager.upgrades["bullet_dmg"]["level"]
+	var mat = b.get_node("Sprite2D").material as ShaderMaterial
+	if mat:
+		mat.set_shader_parameter("time_offset", randf() * 100.0)
+		mat.set_shader_parameter("pressure", clamp(dmg_level / 3.0, 0.0, 1.0))
+
+	b.fire()
+	pool_index = (pool_index + 1) % bullet_pool.size()
+
 func enable_auto_turret():
 	auto_turret_enabled = true
 	# Build the pool on first enable (lazy init)

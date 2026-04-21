@@ -2,9 +2,14 @@
 
 [ext_resource type="Script" uid="uid://d2kgdenecjfmb" path="res://scripts/player.gd" id="1_g2els"]
 [ext_resource type="Texture2D" uid="uid://c16ec7fwceihk" path="res://sprites/circle.png" id="2_g2els"]
+[ext_resource type="Shader" uid="uid://ck6321dnbumga" path="res://shaders/bullet.gdshader" id="2_qhqgy"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_g2els"]
 radius = 63.07139
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dqkch"]
+shader = ExtResource("2_qhqgy")
+shader_parameter/pressure = 1.0
 
 [node name="Player" type="Area2D" unique_id=580082574]
 scale = Vector2(0.4, 0.4)
@@ -15,4 +20,5 @@ shape = SubResource("CircleShape2D_g2els")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1883255769]
 z_index = 10
+material = SubResource("ShaderMaterial_dqkch")
 texture = ExtResource("2_g2els")

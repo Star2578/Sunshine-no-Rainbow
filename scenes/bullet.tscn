@@ -1,10 +1,15 @@
 [gd_scene format=3 uid="uid://bx2i1jvvax56a"]
 
 [ext_resource type="Script" uid="uid://dvdrewkkxbdms" path="res://scripts/bullet.gd" id="1_y25gk"]
+[ext_resource type="Shader" uid="uid://ck6321dnbumga" path="res://shaders/bullet.gdshader" id="2_l5glv"]
 [ext_resource type="Texture2D" uid="uid://c16ec7fwceihk" path="res://sprites/circle.png" id="2_y25gk"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_l5glv"]
 radius = 45.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_eoqba"]
+shader = ExtResource("2_l5glv")
+shader_parameter/pressure = 0.0
 
 [node name="Bullet" type="Area2D" unique_id=436873160]
 scale = Vector2(0.5, 0.5)
@@ -14,11 +19,14 @@ script = ExtResource("1_y25gk")
 shape = SubResource("CircleShape2D_l5glv")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=243701521]
-modulate = Color(0.13384321, 0.4195313, 0.6595918, 1)
+material = SubResource("ShaderMaterial_eoqba")
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_y25gk")
 
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=318720749]
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="." unique_id=784506521]
+emitting = false
 
 [connection signal="area_entered" from="." to="." method="_on_bullet_hit"]
 [connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_screen_exit"]

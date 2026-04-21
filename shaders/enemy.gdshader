@@ -3,6 +3,8 @@ shader_type canvas_item;
 // --- Tuning inputs from GDScript ---
 uniform float mutation : hint_range(0.0, 1.0) = 0.0;  // form chaos: 0=clean, 1=full freak
 uniform float hue_seed = 0.0;                          // unbounded, driven by cycle_count * golden_ratio
+uniform float time_offset = 0.0;
+
 
 // --- Hue rotation ---
 vec3 hue_shift(vec3 color, float shift) {
@@ -20,7 +22,7 @@ void fragment() {
     vec2 uv = UV - 0.5;
     float dist = length(uv);
     float angle = atan(uv.y, uv.x);
-    float t = TIME;
+    float t = TIME + time_offset;
 
     // -------------------------------------------------------
     // CORONA SHAPE
@@ -28,7 +30,8 @@ void fragment() {
     float spike_freq = mix(6.0, 14.0, mutation);
     float noise  = sin(angle * spike_freq + t * 2.0) * 0.5 + 0.5;
           noise += sin(angle * (spike_freq * 1.7) - t * 1.3) * 0.3;
-    float corona_radius = mix(0.35, 0.32 + noise * 0.08, mutation);
+    float wobble_amount = 0.03 + noise * (0.03 + 0.08 * mutation);
+	float corona_radius = mix(0.35, wobble_amount + 0.32, 0.4 + mutation * 0.6);
 
     float body   = smoothstep(corona_radius, corona_radius - 0.05, dist);
     float corona = smoothstep(0.5, corona_radius, dist) * mix(0.4, 0.7, mutation);
@@ -60,8 +63,8 @@ void fragment() {
     // IRIDESCENCE — rainbow oil-slick quality at high mutation
     // -------------------------------------------------------
     float irid = sin(angle * 3.0 + t) * 0.5 + 0.5;
-    vec3 irid_color = hue_shift(color, irid * mutation * 0.25);
-    color = mix(color, irid_color, mutation * 0.6);
+	vec3 irid_color = hue_shift(color, irid * (0.05 + mutation * 0.20));
+	color = mix(color, irid_color, 0.15 + mutation * 0.45);
 
     // -------------------------------------------------------
     // EXTREME TERRITORY — kicks in when hue_seed > 2.0
@@ -77,7 +80,7 @@ void fragment() {
     // -------------------------------------------------------
     // PULSE — faster and more erratic with mutation
     // -------------------------------------------------------
-    float pulse = 1.0 + sin(t * (3.0 + mutation * 4.0)) * 0.12 * mutation;
+    float pulse = 1.0 + sin(t * (3.0 + mutation * 4.0)) * (0.06 + 0.12 * mutation);
     color *= pulse;
 
     COLOR = vec4(color, alpha * COLOR.a);
