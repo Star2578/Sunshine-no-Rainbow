@@ -5,6 +5,7 @@ class_name Player
 var bullet_scene: PackedScene = preload("res://scenes/bullet.tscn")
 var bullet_pool: Array = []
 var pool_index: int = 0
+var auto_fire_timer: float = 0.0
 
 func _ready():
 	GameManager.player = self
@@ -26,18 +27,21 @@ func _input(event: InputEvent):
 			shoot()
 
 func shoot():
-	# Grab the next bullet in the array
 	var b = bullet_pool[pool_index]
 	
-	# Reset and activate it
+	# If the current bullet is still active, the pool is too small!
+	if b.is_active:
+		b = bullet_scene.instantiate()
+		b.hide()
+		b.process_mode = PROCESS_MODE_DISABLED
+		add_child(b)
+		# Insert it so we don't mess up the sequence
+		bullet_pool.insert(pool_index, b)
+		print("Bullet pool expanded to: ", bullet_pool.size())
+
+	# Standard activation
 	b.global_position = global_position
 	b.look_at(get_global_mouse_position())
-	b.show()
-	b.process_mode = PROCESS_MODE_INHERIT
-	
-	# If your bullet has a specific 'reset' function, call it here
-	if b.has_method("fire"):
-		b.fire()
+	b.fire()
 
-	# Cycle the index (wraps around back to 0)
-	pool_index = (pool_index + 1) % pool_size
+	pool_index = (pool_index + 1) % bullet_pool.size()

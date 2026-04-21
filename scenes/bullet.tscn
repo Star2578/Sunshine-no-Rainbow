@@ -20,3 +20,4 @@ texture = ExtResource("1_mkf8s")
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=318720749]
 
 [connection signal="area_entered" from="." to="." method="_on_bullet_hit"]
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_screen_exit"]

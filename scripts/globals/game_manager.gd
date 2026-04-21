@@ -5,16 +5,57 @@ var is_day: bool = true
 
 # Time variables
 var current_time: float = 6.0 # Start at 6:00 AM
-var time_speed: float = 0.05   # How many "in-game hours" pass per real second
+var time_speed: float = 0.1   # How many "in-game hours" pass per real second
 var cycle_count: int = 1
 
+# Player variables
 var player: Player = null
 var money: int = 0
+
 var base_enemy_hp: float = 10.0
+
+var weapons = {
+	"click_gun": {
+		"title": "Ion Pistol (Manual)",
+		"unlocked": true,
+		"stats": {"damage": 10.0, "speed": 1.0, "size": 1.0},
+		"upgrades": {
+			"dmg": {"title": "Power Cell", "level": 0, "cost": 10, "mult": 1.4},
+			"spd": {"title": "Trigger Link", "level": 0, "cost": 15, "mult": 1.3}
+		}
+	},
+	"turret_01": {
+		"title": "Auto-Sentry Alpha",
+		"unlocked": false, # Hidden until purchased or reached cycle
+		"stats": {"damage": 5.0, "speed": 0.5, "range": 300.0},
+		"upgrades": {
+			"dmg": {"title": "Sentry Barrels", "level": 0, "cost": 100, "mult": 1.6},
+			"spd": {"title": "Motor Overclock", "level": 0, "cost": 120, "mult": 1.5}
+		}
+	}
+}
 
 # Dictionary to hold the state of every upgrade
 # Key: ID, Value: {level, base_cost, cost_multiplier}
 var upgrades: Dictionary = {
+	"money": {
+		"title": "Gold Per Kill",
+		"level": 0, 
+		"cost": 10, 
+		"mult": 1.5
+	},
+	"max_hp": {
+		"title": "Max HP",
+		"level": 0, 
+		"cost": 10, 
+		"mult": 1.5
+	},
+	"hp_regen": {
+		"title": "HP Regen",
+		"level": 0, 
+		"cost": 10, 
+		"mult": 1.5
+	},
 	"atk_speed": {
 		"title": "Attack Speed",
 		"level": 0, 
@@ -96,7 +137,6 @@ func attempt_purchase(id: String) -> bool:
 		
 		print("Bought ", id, ". New Level: ", data["level"])
 		return true
-		
 	return false
 
 func apply_upgrade_effect(id: String):
@@ -107,6 +147,32 @@ func apply_upgrade_effect(id: String):
 			pass
 		"auto_turret":
 			pass
+
+func get_spawn_interval():
+	# TODO : This is bad design, need rework
+	var base_rate = 1.0
+	
+	# 1. Scaling: Make it faster every cycle (e.g., 5% faster per cycle)
+	var scaled_rate = base_rate * pow(0.95, cycle_count - 1)
+	
+	# 2. Time of Day Modifier:
+	# Let's make Noon (12.0) and Midnight (0.0) the fastest points.
+	# We use a sin wave or absolute distance from "peak" times.
+	var time_factor = 1.0
+	
+	if is_day:
+		# Day: Enemies spawn faster as it gets closer to 12:00 PM
+		# abs(current_time - 12) gives distance from noon. 
+		# We normalize it so 12:00 = 0.5 multiplier (twice as fast)
+		time_factor = remap(abs(current_time - 12.0), 0.0, 6.0, 0.5, 1.0)
+	else:
+		# Night: Maybe a steadier, slower pace for farming resources?
+		# Or faster at Midnight (0.0/24.0)
+		var dist_from_midnight = min(current_time, abs(24.0 - current_time))
+		time_factor = remap(dist_from_midnight, 0.0, 6.0, 0.7, 1.2)
+		
+	# Final clamping to prevent it from going to 0 (which would crash the game)
+	return max(scaled_rate * time_factor, 0.1)
 
 func get_current_enemy_hp():
 	return base_enemy_hp * pow(1.15, cycle_count)

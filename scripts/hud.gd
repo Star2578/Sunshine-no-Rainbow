@@ -3,8 +3,8 @@ class_name HUD
 
 @onready var main_menu: Control = %MainMenu
 @onready var settings: Control = %Settings
-@onready var upgrade_list = %UpgradeList
-@onready var money_label = %MoneyLabel
+@onready var upgrade_list: BoxContainer = %UpgradeList
+@onready var money_label: Label = %MoneyLabel
 
 var ui_stack: Array[Control] = []
 
@@ -43,7 +43,7 @@ func go_back():
 func _process(_delta: float):
 	if GameManager.is_start:
 		clock.text = GameManager.get_clock_string()
-		money_label = "$" + str(GameManager.money)
+		money_label.text = "$" + str(GameManager.money)
 
 func _on_start_pressed():
 	# Close all menus and start game
@@ -79,7 +79,7 @@ func _on_sfx_slider_value_changed(value: float):
 	AudioServer.set_bus_mute(sfx_bus_idx, value < 0.01)
 
 func create_upgrade_ui(id: String, title: String, cost: int):
-	var item = upgrade_item_scene.instantiate()
+	var item: UpgradeItem = upgrade_item_scene.instantiate()
 	upgrade_list.add_child(item)
 	
 	item.setup(id, title, cost)
