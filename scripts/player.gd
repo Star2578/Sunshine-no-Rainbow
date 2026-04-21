@@ -11,6 +11,7 @@ var auto_bullet_pool: Array = []
 var auto_pool_index: int = 0
 var auto_fire_rate: float = 1.0   # seconds between shots
 var auto_bullet_speed: float = 500.0
+var auto_turret_targets: int = 1
 var auto_turret_enabled: bool = false
 var _auto_timer: float = 0.0
 
@@ -86,15 +87,40 @@ func _process(delta: float):
 		auto_shoot()
 
 func auto_shoot():
-	var target = _find_nearest_enemy()
-	if not target:
+	var targets = _find_nearest_enemies(auto_turret_targets)
+	if targets.is_empty():
 		return
 	
+	for target in targets:
+		_fire_auto_bullet_at(target)
+
+func _find_nearest_enemies(count: int) -> Array:
+	# Gather all active enemies with their distances
+	var candidates = []
+	for node in get_tree().get_nodes_in_group("enemies"):
+		if node is Enemy and node.is_active:
+			candidates.append({
+				"enemy": node,
+				"dist": global_position.distance_to(node.global_position)
+			})
+	
+	# Sort by distance, nearest first
+	candidates.sort_custom(func(a, b): return a["dist"] < b["dist"])
+	
+	# Return up to `count` enemies (if fewer exist, return all)
+	var result = []
+	for i in range(min(count, candidates.size())):
+		result.append(candidates[i]["enemy"])
+	return result
+
+func _fire_auto_bullet_at(target: Enemy):
 	var b = auto_bullet_pool[auto_pool_index]
 	if b.is_active:
 		b = bullet_scene.instantiate()
 		b.hide()
 		b.process_mode = PROCESS_MODE_DISABLED
+		var sprite = b.get_node("Sprite2D")
+		sprite.material = sprite.material.duplicate()
 		add_child(b)
 		auto_bullet_pool.insert(auto_pool_index, b)
 	
@@ -102,20 +128,16 @@ func auto_shoot():
 	b.speed = auto_bullet_speed
 	b.global_position = global_position
 	b.look_at(target.global_position)
+
+	var mat = b.get_node("Sprite2D").material as ShaderMaterial
+	if mat:
+		mat.set_shader_parameter("time_offset", randf() * 100.0)
+		mat.set_shader_parameter("pressure", clamp(
+			GameManager.upgrades["bullet_dmg"]["level"] / 3.0, 0.0, 1.0
+		))
+
 	b.fire()
 	auto_pool_index = (auto_pool_index + 1) % auto_bullet_pool.size()
-
-func _find_nearest_enemy() -> Enemy:
-	var closest: Enemy = null
-	var closest_dist: float = INF
-	# Walk the spawner's pool to find active enemies
-	for node in get_tree().get_nodes_in_group("enemies"):
-		if node is Enemy and node.is_active:
-			var d = global_position.distance_to(node.global_position)
-			if d < closest_dist:
-				closest_dist = d
-				closest = node
-	return closest
 
 func set_bullet_speed(bonus: float):
 	for b in bullet_pool:

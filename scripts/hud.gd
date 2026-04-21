@@ -135,3 +135,5 @@ func apply_upgrade_effect(id: String):
 			GameManager.player.auto_fire_rate = max(0.1, GameManager.player.auto_fire_rate - 0.1)
 		"auto_turret_bullet_speed":
 			GameManager.player.auto_bullet_speed += 50.0
+		"auto_turret_targets":
+			GameManager.player.auto_turret_targets += 1

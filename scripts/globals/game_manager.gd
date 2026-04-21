@@ -79,6 +79,11 @@ var upgrades: Dictionary = {
 		"level": 0, "cost": 40, "mult": 1.6,
 		"requires": "auto_turret"
 	},
+	"auto_turret_targets": {
+		"title": "Turret Targets",
+		"level": 0, "cost": 1000, "mult": 2,
+		"requires": "auto_turret"
+	}
 }
 
 func _process(delta: float):
