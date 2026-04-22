@@ -14,6 +14,32 @@ shader = ExtResource("2_l5glv")
 shader_parameter/pressure = 0.0
 shader_parameter/time_offset = 0.0
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qncy5"]
+shader = ExtResource("2_l5glv")
+shader_parameter/pressure = 0.0
+shader_parameter/time_offset = 0.0
+
+[sub_resource type="Gradient" id="Gradient_qncy5"]
+colors = PackedColorArray(0, 0, 0, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_tamys"]
+gradient = SubResource("Gradient_qncy5")
+
+[sub_resource type="Curve" id="Curve_qncy5"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_tamys"]
+curve = SubResource("Curve_qncy5")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_26lx3"]
+particle_flag_disable_z = true
+gravity = Vector3(0, 0, 0)
+scale_min = 0.099999994
+scale_max = 0.099999994
+scale_curve = SubResource("CurveTexture_tamys")
+color_ramp = SubResource("GradientTexture1D_tamys")
+
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_26lx3"]
 streams_count = 2
 stream_0/stream = ExtResource("4_qncy5")
@@ -27,19 +53,25 @@ script = ExtResource("1_y25gk")
 shape = SubResource("CircleShape2D_l5glv")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=243701521]
+z_index = 1
 material = SubResource("ShaderMaterial_eoqba")
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_y25gk")
 
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=318720749]
 
-[node name="GPUParticles2D" type="GPUParticles2D" parent="." unique_id=784506521]
-emitting = false
+[node name="TrailParticle" type="GPUParticles2D" parent="." unique_id=784506521]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_qncy5")
+amount = 16
+texture = ExtResource("2_y25gk")
+process_material = SubResource("ParticleProcessMaterial_26lx3")
 
 [node name="ShootBulletSFX" type="AudioStreamPlayer2D" parent="." unique_id=1899355392]
 unique_name_in_owner = true
 stream = SubResource("AudioStreamRandomizer_26lx3")
 volume_db = 10.0
+bus = &"SFX"
 
 [connection signal="area_entered" from="." to="." method="_on_bullet_hit"]
 [connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_screen_exit"]

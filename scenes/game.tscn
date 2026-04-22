@@ -4,8 +4,11 @@
 [ext_resource type="PackedScene" uid="uid://dqq5jl65vvvy2" path="res://scenes/player.tscn" id="1_uwrxv"]
 [ext_resource type="Theme" uid="uid://bmjw06kteq7wo" path="res://themes/default_theme.tres" id="1_yqjtg"]
 [ext_resource type="Shader" uid="uid://cflgyyp78b1re" path="res://shaders/damage.gdshader" id="2_p57ef"]
+[ext_resource type="Shader" uid="uid://bpt808ifsxi4k" path="res://shaders/enemy.gdshader" id="4_gee14"]
 [ext_resource type="AudioStream" uid="uid://dyah6a7lbstxw" path="res://music/bgm/Ducko - Happy Stroll.wav" id="4_lbhrr"]
+[ext_resource type="Texture2D" uid="uid://5fididyhmp0o" path="res://sprites/sun.png" id="5_0tnpc"]
 [ext_resource type="Shader" uid="uid://xebr6j6dmh05" path="res://shaders/sky.gdshader" id="5_iywne"]
+[ext_resource type="Script" uid="uid://b2oncymfnpedq" path="res://scripts/ui_clock.gd" id="6_0tnpc"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_u5sy4"]
 shader = ExtResource("2_p57ef")
@@ -13,8 +16,11 @@ shader_parameter/health = 1.0
 shader_parameter/vignette_color = Color(0.5, 0, 0, 1)
 shader_parameter/pulse_speed = 4.0
 
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_lbhrr"]
-size = Vector2(100, 100)
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vtaks"]
+shader = ExtResource("4_gee14")
+shader_parameter/mutation = 0.0
+shader_parameter/hue_seed = 0.0
+shader_parameter/time_offset = 0.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_p57ef"]
 shader = ExtResource("5_iywne")
@@ -113,6 +119,16 @@ grow_vertical = 2
 theme = ExtResource("1_yqjtg")
 bbcode_enabled = true
 
+[node name="TextPoolContainer" type="Control" parent="HUD/GameBackground" unique_id=1328670544]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
 [node name="BG" type="ColorRect" parent="HUD" unique_id=1507932139]
 custom_minimum_size = Vector2(350, 0)
 anchors_preset = 11
@@ -151,8 +167,11 @@ text = "06:00 AM"
 horizontal_alignment = 1
 
 [node name="TextureRect" type="TextureRect" parent="HUD/BG/Sun_Moon" unique_id=417373587]
+material = SubResource("ShaderMaterial_vtaks")
 layout_mode = 2
-texture = SubResource("PlaceholderTexture2D_lbhrr")
+texture = ExtResource("5_0tnpc")
+stretch_mode = 3
+script = ExtResource("6_0tnpc")
 
 [node name="BackButton" type="Button" parent="HUD/BG" unique_id=1069466043]
 unique_name_in_owner = true
@@ -296,8 +315,12 @@ max_value = 1.0
 step = 0.01
 value = 0.5
 
-[node name="QuitButton" type="Button" parent="HUD/BG/Settings/VBoxContainer" unique_id=784241037]
-layout_mode = 2
+[node name="QuitButton" type="Button" parent="HUD/BG/Settings" unique_id=784241037]
+layout_mode = 0
+offset_left = -168.0
+offset_top = 112.0
+offset_right = 176.0
+offset_bottom = 147.0
 theme = ExtResource("1_yqjtg")
 theme_type_variation = &"FlatButton"
 text = "Quit"
@@ -384,6 +407,6 @@ color = Color(0.13682577, 0.13682574, 0.13682571, 1)
 [connection signal="pressed" from="HUD/BG/MainMenu/VBoxContainer/QuitButton" to="HUD" method="_on_quit_pressed"]
 [connection signal="value_changed" from="HUD/BG/Settings/VBoxContainer/BGMContainer/BGMSlider" to="HUD" method="_on_bgm_slider_value_changed"]
 [connection signal="value_changed" from="HUD/BG/Settings/VBoxContainer/SFXContainer/SFXSlider" to="HUD" method="_on_sfx_slider_value_changed"]
-[connection signal="pressed" from="HUD/BG/Settings/VBoxContainer/QuitButton" to="HUD" method="_on_quit_pressed"]
+[connection signal="pressed" from="HUD/BG/Settings/QuitButton" to="HUD" method="_on_quit_pressed"]
 [connection signal="pressed" from="HUD/BG/Retry/VBoxContainer/RetryButton" to="HUD" method="_on_retry_pressed"]
 [connection signal="pressed" from="HUD/BG/Retry/VBoxContainer/QuitButton" to="HUD" method="_on_quit_pressed"]

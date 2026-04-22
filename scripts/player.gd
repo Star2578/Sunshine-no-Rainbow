@@ -8,6 +8,7 @@ var bullet_pool: Array = []
 var pool_index: int = 0
 var click_timer: float = 0.0
 var can_shoot: bool = true
+var is_mouse_held: bool = false
 
 # --- Auto turret ---
 var auto_bullet_pool: Array = []
@@ -22,17 +23,18 @@ func _ready():
 		b.hide() # Keep it invisible
 		b.dmg = GameManager.click_dmg
 		b.process_mode = PROCESS_MODE_DISABLED # Don't let it move/calculate physics
-		add_child(b) # Or add to a global "BulletContainer"
+		%BulletContainer.add_child(b)
 		bullet_pool.append(b)
 
 func _input(event: InputEvent):
 	if not GameManager.is_start:
 		return
 
-	if event is InputEventMouseButton and event.pressed:
-		if event.button_index == MOUSE_BUTTON_LEFT and can_shoot:
-			can_shoot = false
-			shoot()
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			is_mouse_held = true
+		else:
+			is_mouse_held = false
 
 func shoot():
 	var b = bullet_pool[pool_index]
@@ -43,7 +45,7 @@ func shoot():
 		b.hide()
 		b.dmg = GameManager.click_dmg
 		b.process_mode = PROCESS_MODE_DISABLED
-		add_child(b)
+		%BulletContainer.add_child(b)
 		# Insert it so we don't mess up the sequence
 		bullet_pool.insert(pool_index, b)
 		print("Bullet pool expanded to: ", bullet_pool.size())
@@ -71,7 +73,7 @@ func enable_auto_turret():
 			b.dmg = GameManager.auto_dmg
 			b.speed = GameManager.auto_bullet_speed
 			b.process_mode = PROCESS_MODE_DISABLED
-			add_child(b)
+			%BulletContainer.add_child(b)
 			auto_bullet_pool.append(b)
 
 func _process(delta: float):
@@ -83,6 +85,11 @@ func _process(delta: float):
 		if click_timer >= GameManager.click_fire_rate:
 			click_timer = 0.0
 			can_shoot = true
+	
+	# Fire if mouse is held and we can shoot
+	if is_mouse_held and can_shoot:
+		can_shoot = false
+		shoot()
 
 	if GameManager.auto_turret_enabled:
 		_auto_timer += delta
@@ -94,9 +101,9 @@ func auto_shoot():
 	var targets = _find_nearest_enemies(GameManager.auto_targets)
 	if targets.is_empty():
 		return
-	
-	for target in targets:
-		_fire_auto_bullet_at(target)
+
+	for i in range(targets.size()):
+		_fire_auto_bullet_at(targets[i], i * 0.05)  # small stagger delay
 
 func _find_nearest_enemies(count: int) -> Array:
 	# Gather all active enemies with their distances
@@ -117,17 +124,19 @@ func _find_nearest_enemies(count: int) -> Array:
 		result.append(candidates[i]["enemy"])
 	return result
 
-func _fire_auto_bullet_at(target: Enemy):
+func _fire_auto_bullet_at(target: Enemy, delay: float = 0.0):
 	var b = auto_bullet_pool[auto_pool_index]
+	auto_pool_index = (auto_pool_index + 1) % auto_bullet_pool.size()  # advance BEFORE insert check
+
 	if b.is_active:
 		b = bullet_scene.instantiate()
 		b.hide()
 		b.process_mode = PROCESS_MODE_DISABLED
 		var sprite = b.get_node("Sprite2D")
 		sprite.material = sprite.material.duplicate()
-		add_child(b)
-		auto_bullet_pool.insert(auto_pool_index, b)
-	
+		%BulletContainer.add_child(b)
+		auto_bullet_pool.append(b)  # append instead of insert, keeps indices stable
+
 	b.dmg = GameManager.auto_dmg
 	b.speed = GameManager.auto_bullet_speed
 	b.global_position = global_position
@@ -140,12 +149,20 @@ func _fire_auto_bullet_at(target: Enemy):
 			GameManager.upgrades["bullet_dmg"]["level"] / 3.0, 0.0, 1.0
 		))
 
-	b.fire()
-	auto_pool_index = (auto_pool_index + 1) % auto_bullet_pool.size()
+	if delay > 0.0:
+		get_tree().create_timer(delay).timeout.connect(b.fire)
+	else:
+		b.fire()
 
 func set_bullet_speed(bonus: float):
 	for b in bullet_pool:
 		b.speed += bonus
+
+func reset_bullet_speed():
+	for b in bullet_pool:
+		b.speed = GameManager.bullet_speed
+	for b in auto_bullet_pool:
+		b.speed = GameManager.auto_bullet_speed
 
 func despawn():
 	for bullet in bullet_pool:

@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://x00u3u0dctn5"]
+
+[ext_resource type="Theme" uid="uid://bmjw06kteq7wo" path="res://themes/default_theme.tres" id="1_84oje"]
+
+[node name="PopupText" type="RichTextLabel" unique_id=1867377699]
+custom_minimum_size = Vector2(300, 0)
+offset_right = 40.0
+offset_bottom = 40.0
+theme = ExtResource("1_84oje")
+bbcode_enabled = true
+text = "+10000000$"
+fit_content = true
+scroll_active = false

@@ -3,6 +3,10 @@
 [ext_resource type="Script" uid="uid://c8d4rgyyeph2j" path="res://scripts/enemy.gd" id="1_md0e3"]
 [ext_resource type="Shader" uid="uid://bpt808ifsxi4k" path="res://shaders/enemy.gdshader" id="2_4ra3w"]
 [ext_resource type="Texture2D" uid="uid://5fididyhmp0o" path="res://sprites/sun.png" id="2_md0e3"]
+[ext_resource type="Texture2D" uid="uid://d16628drc8o7f" path="res://sprites/31.png" id="4_c4w8v"]
+[ext_resource type="Texture2D" uid="uid://dk3vh385karqc" path="res://sprites/6.png" id="5_xwavj"]
+[ext_resource type="AudioStream" uid="uid://l1kwe13axpbs" path="res://music/sfx/water_drop_synthetic.wav" id="6_xwavj"]
+[ext_resource type="AudioStream" uid="uid://dar1fm286sl8d" path="res://music/sfx/u_xjrmmgxfru-burn-flesh-01-266302.mp3" id="7_nenq2"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_7p1mj"]
 radius = 54.037025
@@ -13,26 +17,53 @@ shader_parameter/mutation = 0.0
 shader_parameter/hue_seed = 0.0
 shader_parameter/time_offset = 0.0
 
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_xwavj"]
+blend_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_c4w8v"]
+colors = PackedColorArray(0.12247934, 0.44855118, 0.52832437, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_xwavj"]
+gradient = SubResource("Gradient_c4w8v")
+
+[sub_resource type="Curve" id="Curve_c4w8v"]
+_data = [Vector2(0.16891894, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -0.29345673, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_xwavj"]
+curve = SubResource("Curve_c4w8v")
+
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_4ra3w"]
 particle_flag_disable_z = true
 emission_shape = 1
 emission_sphere_radius = 80.0
-spread = 180.0
+angle_min = -89.99999
+angle_max = 90.000015
 initial_velocity_min = 60.0
 initial_velocity_max = 140.0
-angular_velocity_min = -90.000015
-angular_velocity_max = 89.999985
 gravity = Vector3(0, 0, 0)
 damping_min = 80.0
 damping_max = 120.00001
-scale_min = 2.0
-scale_max = 4.0
+scale_min = 0.049999997
+scale_max = 0.099999994
+scale_curve = SubResource("CurveTexture_xwavj")
+scale_over_velocity_min = 0.049999997
+scale_over_velocity_max = 0.099999994
+color_ramp = SubResource("GradientTexture1D_xwavj")
 turbulence_enabled = true
 turbulence_noise_strength = 1.2
 
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_nenq2"]
+blend_mode = 1
+
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_5uy6h"]
 particle_flag_disable_z = true
-gravity = Vector3(0, 98, 0)
+spread = 0.0
+angular_velocity_min = 359.99997
+angular_velocity_max = 359.99997
+gravity = Vector3(0, 0, 0)
+scale_min = 0.099999994
+scale_max = 0.099999994
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_c4w8v"]
 particle_flag_disable_z = true
@@ -50,21 +81,35 @@ material = SubResource("ShaderMaterial_5uy6h")
 texture = ExtResource("2_md0e3")
 
 [node name="SparksParticles" type="GPUParticles2D" parent="." unique_id=566456775]
+material = SubResource("CanvasItemMaterial_xwavj")
 emitting = false
-amount = 16
-lifetime = 0.9
+texture = ExtResource("4_c4w8v")
+lifetime = 0.5
 explosiveness = 0.2
 randomness = 0.6
 process_material = SubResource("ParticleProcessMaterial_4ra3w")
 
 [node name="GlitterParticles" type="GPUParticles2D" parent="." unique_id=189947400]
+material = SubResource("CanvasItemMaterial_nenq2")
 emitting = false
+amount = 1
+texture = ExtResource("5_xwavj")
 process_material = SubResource("ParticleProcessMaterial_5uy6h")
 
 [node name="OrbitParticles" type="GPUParticles2D" parent="." unique_id=422326621]
 emitting = false
 process_material = SubResource("ParticleProcessMaterial_c4w8v")
 
+[node name="HitSFX" type="AudioStreamPlayer2D" parent="." unique_id=1759994552]
+unique_name_in_owner = true
+process_mode = 3
+stream = ExtResource("7_nenq2")
+bus = &"SFX"
+
 [node name="DeadSFX" type="AudioStreamPlayer2D" parent="." unique_id=1798338735]
+unique_name_in_owner = true
+process_mode = 3
+stream = ExtResource("6_xwavj")
+bus = &"SFX"
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]

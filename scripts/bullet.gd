@@ -21,6 +21,7 @@ func fire():
 	is_active = true
 	shoot_sfx.play()
 	show()
+	%TrailParticle.restart()
 	process_mode = PROCESS_MODE_INHERIT
 	if has_node("CollisionShape2D"):
 		get_node("CollisionShape2D").set_deferred("disabled", false)

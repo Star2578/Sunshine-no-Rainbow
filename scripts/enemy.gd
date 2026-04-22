@@ -51,12 +51,18 @@ func deactivate():
 func receive_dmg(dmg: float):
 	hp -= dmg
 	if hp <= 0:
-		GameManager.money += GameManager.get_money_for_kill()
+		var m = GameManager.get_money_for_kill()
+		GameManager.money += m
+		%DeadSFX.play()
+		GameManager.hud.spawn_text_popup("[color=YELLOW]+" + str(m) + "$[/color]", global_position)
 		deactivate()
 
 func _on_area_entered(area: Area2D):
 	if area == GameManager.player:
-		GameManager.health -= GameManager.get_current_enemy_dmg()
+		var dmg = GameManager.get_current_enemy_dmg()
+		GameManager.health -= dmg
+		GameManager.hud.spawn_text_popup("[color=RED]-" + str(dmg) + "[/color]", GameManager.player.global_position)
+		%HitSFX.play()
 		deactivate()
 		if GameManager.health <= 0:
 			GameManager.health = 0
