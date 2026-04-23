@@ -19,7 +19,7 @@ var max_health: float = 25.0
 var health: float = 25.0
 var regen: float = 1
 var click_dmg = 10.0
-var click_fire_rate = 0.5
+var click_fire_rate = 0.35
 var bullet_speed = 600.0
 var auto_turret_enabled: bool = false
 var auto_dmg: float = 7.0
@@ -255,10 +255,10 @@ func stats():
 	]
 
 	if auto_turret_enabled:
-		stats_string = stats_string + """	[color=gray]Auto dmg[/color]    			%.1f
-		[color=gray]Auto fire rate[/color]    		%.1f/s
-		[color=gray]Auto bullet speed[/color]    	%.1f px/s
-		[color=gray]Auto targets[/color]    		%.1f
+		stats_string = stats_string + """	[color=RED]Auto dmg[/color]    			%.1f
+		[color=RED]Auto fire rate[/color]    		%.1f s/shot
+		[color=RED]Auto bullet speed[/color]    	%.1f px/s
+		[color=RED]Auto targets[/color]    		%.1f
 		""" % [
 			auto_dmg,
 			auto_fire_rate,

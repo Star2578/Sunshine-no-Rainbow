@@ -42,7 +42,6 @@ color = Color(1, 1, 1, 0)
 
 [node name="DebugText" type="RichTextLabel" parent="HUD/GameBackground" unique_id=419563577]
 unique_name_in_owner = true
-visible = false
 custom_minimum_size = Vector2(300, 400)
 layout_mode = 1
 anchors_preset = 1
@@ -343,9 +342,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -49.0
-offset_top = -20.0
+offset_top = 36.0
 offset_right = 55.0
-offset_bottom = 93.0
+offset_bottom = 149.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 16

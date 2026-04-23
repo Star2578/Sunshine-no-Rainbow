@@ -33,7 +33,7 @@ func _on_buy_button_pressed():
 func update_ui(new_level: int, new_cost: int):
 	level_label.text = "Lv." + str(new_level)
 	current_cost = new_cost
-	buy_button.text = "$" + str(new_cost)
+	buy_button.text = GameManager.format_cost(new_cost)
 
 func set_hotkey(n: int):
 	hotkey_number = n

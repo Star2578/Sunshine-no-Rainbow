@@ -231,7 +231,7 @@ func apply_upgrade_effect(id: String):
 			GameManager.max_health += 5
 			GameManager.health = new_hp * GameManager.max_health
 			GameManager.base_enemy_dmg += 1.0
-			GameManager.base_enemy_hp += 1
+			GameManager.base_enemy_hp += 0.25
 		"hp_regen":
 			GameManager.regen += 0.5
 			GameManager.base_enemy_dmg += 0.1
@@ -249,7 +249,7 @@ func apply_upgrade_effect(id: String):
 		"auto_turret":
 			GameManager.auto_turret_enabled = true
 			GameManager.player.enable_auto_turret()
-			GameManager.base_spawn_rate -= 0.05
+			GameManager.base_spawn_rate -= 0.01
 			GameManager.base_enemy_hp += 2
 			_reveal_locked_upgrades("auto_turret")
 		"auto_turret_dmg":
@@ -257,7 +257,7 @@ func apply_upgrade_effect(id: String):
 			GameManager.base_enemy_hp += 1.5
 		"auto_turret_fire_rate":
 			GameManager.auto_fire_rate = max(0.2, GameManager.auto_fire_rate - GameManager.auto_fire_rate * 0.15)
-			GameManager.base_enemy_hp += 4.0
+			GameManager.base_enemy_hp += 2.0
 			GameManager.base_spawn_rate -= 0.01
 		"auto_turret_bullet_speed":
 			GameManager.auto_bullet_speed += 50.0
